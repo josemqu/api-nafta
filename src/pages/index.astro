@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+// import Table from '../components/Table.svelte';
+import App from '../components/App.svelte';
+---
+
+<Layout title="API de precios en surtidor">
+	<div class="absolute top-0 z-[-2] h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]"></div>
+	<main class="min-h-screen w-screen p-10">
+		<h1 class="text-4xl text-white text-center opacity-70 font-bold pb-10">API Precios
+		</h1>
+		<section class="container w-[1000px] max-w-xl h-64">
+			<!-- <Table client:idle /> -->
+			<App client:idle />
+		</section>
+	</main>
+</Layout>
+
+<style>
+</style>
