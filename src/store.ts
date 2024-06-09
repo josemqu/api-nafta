@@ -14,6 +14,7 @@ export const appStatusInfo = writable({
   selectedProducto: [] as string[],
   selectedBandera: [] as string[],
   selectedProvincia: [] as string[],
+  zone: "",
   records: [] as Record[],
   total: 0,
   page: 1,
@@ -32,6 +33,7 @@ export const setAppStatusLoaded = ({
   selectedProducto,
   selectedBandera,
   selectedProvincia,
+  zone,
   records,
   total,
   page,
@@ -40,6 +42,7 @@ export const setAppStatusLoaded = ({
   selectedProducto: string[];
   selectedBandera: string[];
   selectedProvincia: string[];
+  zone: string;
   records: Record[];
   total: number;
   page: number;
@@ -50,6 +53,7 @@ export const setAppStatusLoaded = ({
     selectedProducto,
     selectedBandera,
     selectedProvincia,
+    zone,
     records,
     total,
     page,

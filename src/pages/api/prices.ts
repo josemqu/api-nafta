@@ -12,12 +12,17 @@ const isArrayOfNonEmptyStrings = (arr: any): boolean => {
   );
 };
 
-export const GET: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request }) => {
+  const formData = await request.formData();
+
   const url = new URL(request.url);
   const params = url.searchParams;
   const producto = params.get("producto")?.split(",");
   const empresabandera = params.get("empresabandera")?.split(",");
   const provincia = params.get("provincia")?.split(",");
+  const zone = formData.get("zone")?.toString() || "";
+
+  console.log({ producto, empresabandera, provincia, zone });
 
   // filters is an object. If any value y null, it will be removed from the object
   const filters: {
@@ -38,8 +43,10 @@ export const GET: APIRoute = async ({ request }) => {
     filters["provincia"] = provincia;
   }
 
+  console.log({ filters });
+
   const limit = 5000;
 
-  const data = await getDataFromBbox(filters, limit);
+  const data = await getDataFromBbox(filters, limit, zone);
   return new Response(JSON.stringify(data));
 };

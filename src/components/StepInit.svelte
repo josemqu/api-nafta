@@ -14,11 +14,22 @@
   let selectedProvincia = $appStatusInfo.selectedProvincia;
   let selectedProducto = $appStatusInfo.selectedProducto;
   let selectedBandera = $appStatusInfo.selectedBandera;
+  let zone = $appStatusInfo.zone;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
     loading = true;
+
+    // get form data
+    const formData = new FormData();
+    formData.append("producto", selectedProducto);
+    formData.append("empresabandera", selectedBandera);
+    formData.append("provincia", selectedProvincia);
+    formData.append("zone", document.getElementById("zone-input").value);
+
+    // get data from formData
+    const zone = formData.get("zone");
 
     // reset app status
     appStatus.set(APP_STATUS.LOADING);
@@ -38,9 +49,12 @@
       searchParams.append("provincia", selectedProvincia);
 
     try {
-      const url = `/api/prices?${searchParams.toString()}`;
+      const url = `/api/prices?${searchParams.toString()}`; // ?${searchParams.toString()}
 
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error("Error al consultar los precios");
@@ -52,6 +66,7 @@
         selectedProducto,
         selectedBandera,
         selectedProvincia,
+        zone,
         records: data.result.records,
         total: data.result.total,
         page: data.result.page,
@@ -95,7 +110,7 @@
         Banderas
         <MultiSelect
           placeholder="Seleccione una o varias..."
-          class="mt-2 min-w-96 bg-slate-900"
+          class="mt-2 min-w-60 bg-slate-900"
           items={banderas}
           bind:value={selectedBandera}
         />
@@ -106,10 +121,9 @@
         Combustibles
         <MultiSelect
           placeholder="Seleccione uno o varios..."
-          class="mt-2 min-w-96 bg-slate-900"
+          class="mt-2 min-w-60 bg-slate-900"
           items={productos}
           bind:value={selectedProducto}
-          on:change={handleSubmit}
         />
       </Label>
     </div>
@@ -118,12 +132,21 @@
         Provincias
         <MultiSelect
           placeholder="Seleccione una o varias..."
-          class="mt-2 min-w-96 bg-slate-900"
+          class="mt-2 min-w-60 bg-slate-900"
           items={provincias}
           bind:value={selectedProvincia}
-          on:change={handleSubmit}
         />
       </Label>
+    </div>
+    <div class="mb-6 dark">
+      <Label for="zone-input" class="block mb-2">Zona</Label>
+      <Input
+        id="zone-input"
+        name="zone-input"
+        class="mt-2 min-w-60 bg-slate-900"
+        placeholder="min Lng, min Lat, max Lng, max Lat"
+        bind:value={zone}
+      />
     </div>
   </div>
   <div class="flex justify-between align-middle">

@@ -105,17 +105,31 @@ interface BoundingBox {
 // perform a geo-location query with the specified parameters using JavaScript
 export const getDataFromBbox = async (
   filters: Object = {},
-  limit: number = 100
+  limit: number = 100,
+  zone: string
 ): Promise<CKANResponse> => {
   // Define your bounding box (min latitude, min longitude, max latitude, max longitude)
 
-  // bbox for these coords -57.610073,-38.033490,-57.530594,-37.956380
-  const bbox: BoundingBox = {
-    min_latitude: -38.03349,
-    min_longitude: -57.610073,
-    max_latitude: -37.95638,
-    max_longitude: -57.530594,
+  const zoneCoords =
+    zone === "" ? null : zone.split(",").map((coord) => parseFloat(coord));
+
+  let bbox: BoundingBox = {
+    min_latitude: -90,
+    min_longitude: -180,
+    max_latitude: 90,
+    max_longitude: 180,
   };
+
+  // bbox for these 'zone' coords
+  if (!!zone) {
+    bbox = {
+      min_latitude: zoneCoords[1],
+      min_longitude: zoneCoords[0],
+      max_latitude: zoneCoords[3],
+      max_longitude: zoneCoords[2],
+    };
+  }
+  console.log({ bbox });
 
   // Additional filters
   const allFilters = JSON.stringify({
@@ -131,7 +145,7 @@ export const getDataFromBbox = async (
   });
 
   const url = `${CKAN_API_URL}?${params.toString()}`;
-  // console.log({ url });
+  console.log({ url });
 
   // Perform the query
   return fetch(url, {
@@ -143,6 +157,8 @@ export const getDataFromBbox = async (
     .then((data: CKANResponse) => {
       if (data.success) {
         const records = data.result.records;
+
+        console.log({ bbox });
 
         // Apply the bounding box filter on the client side
         const filteredRecords = records.filter((record) => {
