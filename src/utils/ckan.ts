@@ -7,8 +7,6 @@ export const getDataset = async (
 ): Promise<Dataset> => {
   const url = `${CKAN_API_URL}?resource_id=${RESOURCE_ID}&filters={${filters}}&limit=${limit}`;
 
-  console.log({ url });
-
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
@@ -133,7 +131,7 @@ export const getDataFromBbox = async (
   });
 
   const url = `${CKAN_API_URL}?${params.toString()}`;
-  console.log({ url });
+  // console.log({ url });
 
   // Perform the query
   return fetch(url, {

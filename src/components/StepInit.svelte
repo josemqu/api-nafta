@@ -15,17 +15,10 @@
   let selectedProducto = $appStatusInfo.selectedProducto;
   let selectedBandera = $appStatusInfo.selectedBandera;
 
-  console.log({
-    selectedProducto,
-    selectedBandera,
-    selectedProvincia,
-  });
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
     loading = true;
-    console.log("Form submitted");
 
     // reset app status
     appStatus.set(APP_STATUS.LOADING);
@@ -46,10 +39,9 @@
 
     try {
       const url = `/api/prices?${searchParams.toString()}`;
-      console.log({ url });
 
       const response = await fetch(url);
-      // console.log({ response });
+
       if (!response.ok) {
         throw new Error("Error al consultar los precios");
       }
@@ -67,10 +59,8 @@
       });
 
       const info = $appStatusInfo;
-      console.log({ info });
     } catch (error) {
       console.error(error);
-      console.log("catched error");
       setAppStatusError();
     } finally {
       loading = false;
@@ -95,18 +85,27 @@
     name: Empresabandera[key],
   }));
 
-  console.log({ provincias, productos, banderas });
-
   const records = $appStatusInfo.records;
 </script>
 
 <form class="w-full mb-4" on:submit={handleSubmit} id="form-init">
   <div class="flex justify-between gap-4">
+    <div class="mb-6 dark">
+      <Label>
+        Banderas
+        <MultiSelect
+          placeholder="Seleccione una o varias..."
+          class="mt-2 min-w-96 bg-slate-900"
+          items={banderas}
+          bind:value={selectedBandera}
+        />
+      </Label>
+    </div>
     <div class="mb-4 dark">
       <Label>
-        Seleccione un combustible
+        Combustibles
         <MultiSelect
-          placeholder="Seleccione un combustible..."
+          placeholder="Seleccione uno o varios..."
           class="mt-2 min-w-96 bg-slate-900"
           items={productos}
           bind:value={selectedProducto}
@@ -116,20 +115,9 @@
     </div>
     <div class="mb-6 dark">
       <Label>
-        Seleccione una bandera
+        Provincias
         <MultiSelect
-          placeholder="Seleccione una bandera..."
-          class="mt-2 min-w-96 bg-slate-900"
-          items={banderas}
-          bind:value={selectedBandera}
-        />
-      </Label>
-    </div>
-    <div class="mb-6 dark">
-      <Label>
-        Seleccione una provincia
-        <MultiSelect
-          placeholder="Seleccione una provincia..."
+          placeholder="Seleccione una o varias..."
           class="mt-2 min-w-96 bg-slate-900"
           items={provincias}
           bind:value={selectedProvincia}
@@ -151,27 +139,27 @@
     <div class="flex justify-center items-center gap-4">
       {#if records.length > 0}
         <Badge color="green">
-          {selectedProducto?.length > 0
-            ? selectedProducto
-                ?.map((el) => {
-                  return Producto[el];
-                })
-                .join(", ")
-            : "Todos"}
-        </Badge>
-        <Badge color="green">
           {selectedBandera?.length > 0
             ? selectedBandera
                 ?.map((el) => {
                   return Empresabandera[el];
                 })
                 .join(", ")
-            : "Todas"}
+            : "Todas las banderas"}
+        </Badge>
+        <Badge color="green">
+          {selectedProducto?.length > 0
+            ? selectedProducto
+                ?.map((el) => {
+                  return Producto[el];
+                })
+                .join(", ")
+            : "Todos los combustibles"}
         </Badge>
         <Badge color="green">
           {selectedProvincia?.length > 0
             ? selectedProvincia?.join(", ")
-            : "Todas"}
+            : "Todas las provincias"}
         </Badge>
         <Badge color="green">
           {records.length} registros

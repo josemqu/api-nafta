@@ -19,8 +19,6 @@ export const GET: APIRoute = async ({ request }) => {
   const empresabandera = params.get("empresabandera")?.split(",");
   const provincia = params.get("provincia")?.split(",");
 
-  console.log({ provincia, producto, empresabandera });
-
   // filters is an object. If any value y null, it will be removed from the object
   const filters: {
     producto?: string[];
