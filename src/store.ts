@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import { type Record } from "./utils/types.ts";
 
 export const APP_STATUS = {
   INIT: 0,
@@ -9,7 +10,15 @@ export const APP_STATUS = {
 
 export const appStatus = writable(APP_STATUS.INIT);
 
-export const appStatusInfo = writable({});
+export const appStatusInfo = writable({
+  selectedProducto: [] as string[],
+  selectedBandera: [] as string[],
+  selectedProvincia: [] as string[],
+  records: [] as Record[],
+  total: 0,
+  page: 1,
+  limit: 10,
+});
 
 export const setAppStatusLoading = () => {
   appStatus.set(APP_STATUS.LOADING);
@@ -20,21 +29,30 @@ export const setAppStatusError = () => {
 };
 
 export const setAppStatusLoaded = ({
-  records, // Change 'data' to 'records'
+  selectedProducto,
+  selectedBandera,
+  selectedProvincia,
+  records,
   total,
   page,
   limit,
 }: {
-  records: any[];
+  selectedProducto: string[];
+  selectedBandera: string[];
+  selectedProvincia: string[];
+  records: Record[];
   total: number;
   page: number;
   limit: number;
 }) => {
   appStatus.set(APP_STATUS.LOADED);
   appStatusInfo.set({
+    selectedProducto,
+    selectedBandera,
+    selectedProvincia,
     records,
     total,
     page,
     limit,
-  }); // Change 'data' to 'records'
+  });
 };
