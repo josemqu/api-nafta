@@ -111,24 +111,17 @@ export const getDataFromBbox = async (
   // Define your bounding box (min latitude, min longitude, max latitude, max longitude)
 
   const zoneCoords =
-    zone === "" ? null : zone.split(",").map((coord) => parseFloat(coord));
-
-  let bbox: BoundingBox = {
-    min_latitude: -90,
-    min_longitude: -180,
-    max_latitude: 90,
-    max_longitude: 180,
-  };
+    zone === ""
+      ? null
+      : zone.split(",").map((coord) => parseFloat(coord)) ?? [];
 
   // bbox for these 'zone' coords
-  if (!!zone) {
-    bbox = {
-      min_latitude: zoneCoords[1],
-      min_longitude: zoneCoords[0],
-      max_latitude: zoneCoords[3],
-      max_longitude: zoneCoords[2],
-    };
-  }
+  let bbox = {
+    min_latitude: zoneCoords ? zoneCoords[1] ?? -90 : -90,
+    min_longitude: zoneCoords ? zoneCoords[0] ?? -180 : -180,
+    max_latitude: zoneCoords ? zoneCoords[3] ?? 90 : 90,
+    max_longitude: zoneCoords ? zoneCoords[2] ?? 180 : 180,
+  };
   console.log({ bbox });
 
   // Additional filters
