@@ -9,10 +9,13 @@
 {#if $appStatus === APP_STATUS.INIT}
   <StepInit />
 {:else if $appStatus === APP_STATUS.LOADING}
+  <StepInit />
   <StepLoading />
 {:else if $appStatus === APP_STATUS.LOADED}
+  <StepInit />
   <StepLoaded />
 {:else if $appStatus === APP_STATUS.ERROR}
+  <StepInit />
   <Alert class="dark">
     <span>Algo malo ha pasado. Hay un error en la aplicación</span>
   </Alert>

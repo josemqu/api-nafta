@@ -1,1 +1,1 @@
-<span class="text-white">Cargado...</span>
+<!-- <span class="text-white">Cargando...</span> -->
