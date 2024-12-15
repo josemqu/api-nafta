@@ -71,6 +71,7 @@
         total: data.result.total,
         page: data.result.page,
         limit: data.result.limit,
+        time: data.time,
       });
 
       const info = $appStatusInfo;
@@ -101,16 +102,21 @@
   }));
 
   const records = $appStatusInfo.records;
+  const time = $appStatusInfo.time;
 </script>
 
-<form class="w-full mb-4" on:submit={handleSubmit} id="form-init">
+<form
+  class="w-full p-4 mb-4 rounded-lg sticky top-4 bg-gray-700 shadow-xl border border-slate-600 z-20"
+  on:submit={handleSubmit}
+  id="form-init"
+>
   <div class="flex justify-between gap-4">
     <div class="mb-6 dark">
       <Label>
         Banderas
         <MultiSelect
           placeholder="Seleccione una o varias..."
-          class="mt-2 min-w-60 bg-slate-900"
+          class="mt-2 min-w-60 bg-gray-900"
           items={banderas}
           bind:value={selectedBandera}
         />
@@ -121,7 +127,7 @@
         Combustibles
         <MultiSelect
           placeholder="Seleccione uno o varios..."
-          class="mt-2 min-w-60 bg-slate-900"
+          class="mt-2 min-w-60 bg-gray-900"
           items={productos}
           bind:value={selectedProducto}
         />
@@ -132,18 +138,18 @@
         Provincias
         <MultiSelect
           placeholder="Seleccione una o varias..."
-          class="mt-2 min-w-60 bg-slate-900"
+          class="mt-2 min-w-60 bg-gray-900"
           items={provincias}
           bind:value={selectedProvincia}
         />
       </Label>
     </div>
-    <div class="mb-6 dark">
+    <div class="mb-6">
       <Label for="zone-input" class="block mb-2">Zona</Label>
       <Input
         id="zone-input"
         name="zone-input"
-        class="mt-2 min-w-60 bg-slate-900"
+        class="mt-2 min-w-60 bg-slate-900 border-slate-600"
         placeholder="min Lng, min Lat, max Lng, max Lat"
         bind:value={zone}
       />
@@ -161,7 +167,7 @@
     </div>
     <div class="flex justify-center items-center gap-4">
       {#if records.length > 0}
-        <Badge color="green">
+        <Badge color="blue">
           {selectedBandera?.length > 0
             ? selectedBandera
                 ?.map((el) => {
@@ -170,7 +176,7 @@
                 .join(", ")
             : "Todas las banderas"}
         </Badge>
-        <Badge color="green">
+        <Badge color="blue">
           {selectedProducto?.length > 0
             ? selectedProducto
                 ?.map((el) => {
@@ -179,13 +185,16 @@
                 .join(", ")
             : "Todos los combustibles"}
         </Badge>
-        <Badge color="green">
+        <Badge color="blue">
           {selectedProvincia?.length > 0
             ? selectedProvincia?.join(", ")
             : "Todas las provincias"}
         </Badge>
-        <Badge color="green">
+        <Badge color="blue">
           {records.length} registros
+        </Badge>
+        <Badge color="blue">
+          {(time / 60).toLocaleString("es-AR", { minimumFractionDigits: 2 })} segundos
         </Badge>
       {/if}
     </div>

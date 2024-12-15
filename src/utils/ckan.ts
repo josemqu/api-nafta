@@ -93,6 +93,7 @@ interface CKANResponse {
     records: Record<string, any>[];
   };
   error?: string;
+  time?: number;
 }
 
 interface BoundingBox {
@@ -105,7 +106,7 @@ interface BoundingBox {
 // perform a geo-location query with the specified parameters using JavaScript
 export const getDataFromBbox = async (
   filters: Object = {},
-  limit: number = 100,
+  limit: number = 10000000,
   zone: string
 ): Promise<CKANResponse> => {
   // Define your bounding box (min latitude, min longitude, max latitude, max longitude)
@@ -140,6 +141,12 @@ export const getDataFromBbox = async (
   const url = `${CKAN_API_URL}?${params.toString()}`;
   console.log({ url });
 
+  // initialize time for performance measurement
+  console.time("getDataFromBbox");
+
+  // initialize time for returning the response
+  let time = new Date().getTime();
+
   // Perform the query
   return fetch(url, {
     headers: {
@@ -165,15 +172,24 @@ export const getDataFromBbox = async (
           );
         });
 
+        // get time for returning the response
+        time = new Date().getTime() - time;
+
         // return the complete response with the filtered records
-        return { ...data, result: { records: filteredRecords } };
+        return { ...data, result: { records: filteredRecords }, time };
       } else {
         console.error("Error:", data.error);
         throw new Error(data.error); // Throw an error when data.success is false
       }
     })
     .catch((error) => {
-      console.error("Fetch error:", error);
-      throw error; // Re-throw the error to ensure the function doesn't return undefined
+      console.error("Fetch error:", { error });
+      // get time for returning the response
+      time = new Date().getTime() - time;
+      throw { error, time }; // Re-throw the error to ensure the function doesn't return undefined
+    })
+    .finally(() => {
+      // print the time for performance measurement
+      console.timeEnd("getDataFromBbox");
     });
 };

@@ -19,6 +19,7 @@ export const appStatusInfo = writable({
   total: 0,
   page: 1,
   limit: 10,
+  time: 0,
 });
 
 export const setAppStatusLoading = () => {
@@ -38,6 +39,7 @@ export const setAppStatusLoaded = ({
   total,
   page,
   limit,
+  time,
 }: {
   selectedProducto: string[];
   selectedBandera: string[];
@@ -47,6 +49,7 @@ export const setAppStatusLoaded = ({
   total: number;
   page: number;
   limit: number;
+  time: number;
 }) => {
   appStatus.set(APP_STATUS.LOADED);
   appStatusInfo.set({
@@ -58,5 +61,6 @@ export const setAppStatusLoaded = ({
     total,
     page,
     limit,
+    time,
   });
 };

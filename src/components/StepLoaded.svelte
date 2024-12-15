@@ -20,18 +20,19 @@
   const records = $appStatusInfo.records;
 </script>
 
+<!-- <div class="sticky top-0"> -->
 {#if records}
-  <Table hoverable={true} class="dark w-full" shadow>
+  <Table hoverable={true} class="relative dark w-full" shadow>
     <TableHead>
-      <TableHeadCell class="text-center">#</TableHeadCell>
-      <TableHeadCell class="text-center">ID</TableHeadCell>
-      <TableHeadCell>Empresa</TableHeadCell>
-      <TableHeadCell class="text-center">Fecha</TableHeadCell>
-      <TableHeadCell>Producto</TableHeadCell>
-      <TableHeadCell class="text-center">Precio</TableHeadCell>
-      <TableHeadCell>Provincia</TableHeadCell>
-      <TableHeadCell>Localidad</TableHeadCell>
-      <TableHeadCell>Dirección</TableHeadCell>
+      <TableHeadCell class="sticky top-0 text-center">#</TableHeadCell>
+      <TableHeadCell class="sticky top-0 text-center">ID</TableHeadCell>
+      <TableHeadCell class="sticky top-0">Empresa</TableHeadCell>
+      <TableHeadCell class="sticky top-0 text-center">Fecha</TableHeadCell>
+      <TableHeadCell class="sticky top-0">Producto</TableHeadCell>
+      <TableHeadCell class="sticky top-0 text-center">Precio</TableHeadCell>
+      <TableHeadCell class="sticky top-0">Provincia</TableHeadCell>
+      <TableHeadCell class="sticky top-0">Localidad</TableHeadCell>
+      <TableHeadCell class="sticky top-0">Dirección</TableHeadCell>
     </TableHead>
     <TableBody tableBodyClass="divide-y">
       {#each records as record, i}
@@ -75,3 +76,8 @@
 {#if $appStatus === APP_STATUS.LOADING}
   <span class="text-yellow-500">Cargando...</span>
 {/if}
+
+<!-- </div> -->
+
+<style>
+</style>
