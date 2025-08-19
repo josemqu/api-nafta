@@ -20,15 +20,17 @@ export const POST: APIRoute = async ({ request }) => {
   const producto = params.get("producto")?.split(",");
   const empresabandera = params.get("empresabandera")?.split(",");
   const provincia = params.get("provincia")?.split(",");
+  const localidad = params.get("localidad")?.split(",");
   const zone = formData.get("zone")?.toString() || "";
 
-  console.log({ producto, empresabandera, provincia, zone });
+  console.log({ producto, empresabandera, provincia, localidad, zone });
 
   // filters is an object. If any value y null, it will be removed from the object
   const filters: {
     producto?: string[];
     empresabandera?: string[];
     provincia?: string[];
+    localidad?: string[];
   } = {};
 
   if (isArrayOfNonEmptyStrings(producto)) {
@@ -41,6 +43,10 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (isArrayOfNonEmptyStrings(provincia)) {
     filters["provincia"] = provincia;
+  }
+
+  if (isArrayOfNonEmptyStrings(localidad)) {
+    filters["localidad"] = localidad;
   }
 
   console.log({ filters });

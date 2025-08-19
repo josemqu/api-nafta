@@ -1,23 +1,24 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 // import Table from '../components/Table.svelte';
-import App from '../components/App.svelte';
+import App from "../components/App.svelte";
 ---
 
 <Layout title="API de precios en surtidor">
-	<div class="h-fit top-0 z-[-2] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]">
-		<main class="p-10">
-			<h1 class="text-3xl text-white opacity-70 pb-10">
+  <div
+    class="h-fit top-0 z-[-2] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]"
+  >
+    <main class="p-10">
+      <!-- <h1 class="text-3xl text-white opacity-70 pb-10">
 				<a href="/">
 					Precios en Surtidor
 				</a>
-			</h1>
-			<section>
-				<App client:idle />
-			</section>
-		</main>
-	</div>
+			</h1> -->
+      <section>
+        <App client:idle />
+      </section>
+    </main>
+  </div>
 </Layout>
 
-<style>
-</style>
+<style></style>

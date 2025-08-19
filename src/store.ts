@@ -1,6 +1,58 @@
 import { writable } from "svelte/store";
 import { type Record } from "./utils/types.ts";
 
+// Key for persisting selected filters in localStorage
+const FILTERS_KEY = "nafta_filters_v1";
+
+type PersistedFilters = {
+  selectedProducto: string[];
+  selectedBandera: string[];
+  selectedProvincia: string[];
+  selectedLocalidad: string[];
+  zone: string;
+};
+
+const defaultFilters: PersistedFilters = {
+  selectedProducto: [],
+  selectedBandera: [],
+  selectedProvincia: [],
+  selectedLocalidad: [],
+  zone: "",
+};
+
+function isBrowser() {
+  return typeof window !== "undefined" && typeof localStorage !== "undefined";
+}
+
+function loadPersistedFilters(): PersistedFilters {
+  if (!isBrowser()) return { ...defaultFilters };
+  try {
+    const raw = localStorage.getItem(FILTERS_KEY);
+    if (!raw) return { ...defaultFilters };
+    const parsed = JSON.parse(raw);
+    const ensureArray = (v: unknown) => (Array.isArray(v) ? (v as string[]) : []);
+    const ensureString = (v: unknown) => (typeof v === "string" ? (v as string) : "");
+    return {
+      selectedProducto: ensureArray(parsed.selectedProducto),
+      selectedBandera: ensureArray(parsed.selectedBandera),
+      selectedProvincia: ensureArray(parsed.selectedProvincia),
+      selectedLocalidad: ensureArray(parsed.selectedLocalidad),
+      zone: ensureString(parsed.zone),
+    };
+  } catch {
+    return { ...defaultFilters };
+  }
+}
+
+function persistFilters(filters: PersistedFilters) {
+  if (!isBrowser()) return;
+  try {
+    localStorage.setItem(FILTERS_KEY, JSON.stringify(filters));
+  } catch {
+    // ignore quota/serialization errors
+  }
+}
+
 export const APP_STATUS = {
   INIT: 0,
   LOADING: 1,
@@ -10,16 +62,27 @@ export const APP_STATUS = {
 
 export const appStatus = writable(APP_STATUS.INIT);
 
+const persisted = loadPersistedFilters();
+
 export const appStatusInfo = writable({
-  selectedProducto: [] as string[],
-  selectedBandera: [] as string[],
-  selectedProvincia: [] as string[],
-  zone: "",
+  ...persisted,
   records: [] as Record[],
   total: 0,
   page: 1,
   limit: 10,
   time: 0,
+});
+
+// Persist filters whenever they change in the store
+appStatusInfo.subscribe((state) => {
+  const filters: PersistedFilters = {
+    selectedProducto: state.selectedProducto,
+    selectedBandera: state.selectedBandera,
+    selectedProvincia: state.selectedProvincia,
+    selectedLocalidad: state.selectedLocalidad,
+    zone: state.zone,
+  };
+  persistFilters(filters);
 });
 
 export const setAppStatusLoading = () => {
@@ -34,6 +97,7 @@ export const setAppStatusLoaded = ({
   selectedProducto,
   selectedBandera,
   selectedProvincia,
+  selectedLocalidad,
   zone,
   records,
   total,
@@ -44,6 +108,7 @@ export const setAppStatusLoaded = ({
   selectedProducto: string[];
   selectedBandera: string[];
   selectedProvincia: string[];
+  selectedLocalidad: string[];
   zone: string;
   records: Record[];
   total: number;
@@ -56,6 +121,7 @@ export const setAppStatusLoaded = ({
     selectedProducto,
     selectedBandera,
     selectedProvincia,
+    selectedLocalidad,
     zone,
     records,
     total,

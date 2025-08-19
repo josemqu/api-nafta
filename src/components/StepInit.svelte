@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import {
     APP_STATUS,
     appStatus,
@@ -14,7 +14,56 @@
   let selectedProvincia = $appStatusInfo.selectedProvincia;
   let selectedProducto = $appStatusInfo.selectedProducto;
   let selectedBandera = $appStatusInfo.selectedBandera;
+  let selectedLocalidad = $appStatusInfo.selectedLocalidad;
   let zone = $appStatusInfo.zone;
+  // Localidades options for the MultiSelect
+  let localidades: { value: string; name: string }[] = [];
+
+  // Load localidades options based on current filters
+  const loadLocalidadesOptions = async () => {
+    const searchParams = new URLSearchParams();
+    if (selectedProducto?.length > 0)
+      searchParams.append("producto", selectedProducto.join(","));
+    if (selectedBandera?.length > 0)
+      searchParams.append("empresabandera", selectedBandera.join(","));
+    if (selectedProvincia?.length > 0)
+      searchParams.append("provincia", selectedProvincia.join(","));
+
+    const url = `/api/prices?${searchParams.toString()}`;
+    const formData = new FormData();
+    formData.append("zone", ""); // no limitar por zona para listar localidades
+    try {
+      const res = await fetch(url, { method: "POST", body: formData });
+      if (!res.ok) return;
+      const data = await res.json();
+      const uniq = Array.from(
+        new Set((data.result?.records || []).map((r) => r.localidad).filter(Boolean))
+      ) as string[];
+      localidades = uniq
+        .sort((a, b) => a.localeCompare(b, "es-AR"))
+        .map((loc) => ({ value: loc, name: loc }));
+    } catch (e) {
+      console.error("Error cargando localidades", e);
+    }
+  };
+
+  // Reactive: reload localidades when any relevant filter changes
+  $: (async () => {
+    const hasProvincia = selectedProvincia && selectedProvincia.length > 0;
+    const hasProducto = selectedProducto && selectedProducto.length > 0;
+    const hasBandera = selectedBandera && selectedBandera.length > 0;
+    if (hasProvincia || hasProducto || hasBandera) {
+      if (hasProvincia) {
+        await loadLocalidadesOptions();
+      } else {
+        localidades = [];
+        selectedLocalidad = [];
+      }
+    } else {
+      localidades = [];
+      selectedLocalidad = [];
+    }
+  })();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,6 +88,7 @@
       selectedProducto,
       selectedBandera,
       selectedProvincia,
+      selectedLocalidad,
     });
 
     const searchParams = new URLSearchParams();
@@ -47,6 +97,8 @@
       searchParams.append("empresabandera", selectedBandera);
     if (!!selectedProvincia)
       searchParams.append("provincia", selectedProvincia);
+    if (selectedLocalidad?.length > 0)
+      searchParams.append("localidad", selectedLocalidad.join(","));
 
     try {
       const url = `/api/prices?${searchParams.toString()}`; // ?${searchParams.toString()}
@@ -66,6 +118,7 @@
         selectedProducto,
         selectedBandera,
         selectedProvincia,
+        selectedLocalidad,
         zone,
         records: data.result.records,
         total: data.result.total,
@@ -119,6 +172,7 @@
           class="mt-2 min-w-60 bg-gray-900"
           items={banderas}
           bind:value={selectedBandera}
+          search={true}
         />
       </Label>
     </div>
@@ -130,6 +184,7 @@
           class="mt-2 min-w-60 bg-gray-900"
           items={productos}
           bind:value={selectedProducto}
+          search={true}
         />
       </Label>
     </div>
@@ -141,6 +196,20 @@
           class="mt-2 min-w-60 bg-gray-900"
           items={provincias}
           bind:value={selectedProvincia}
+          search={true}
+        />
+      </Label>
+    </div>
+    <div class="mb-6 dark">
+      <Label>
+        Localidad
+        <MultiSelect
+          placeholder="Seleccione una o varias..."
+          class="mt-2 min-w-60 bg-gray-900"
+          items={localidades}
+          bind:value={selectedLocalidad}
+          disabled={localidades.length === 0}
+          search={true}
         />
       </Label>
     </div>
@@ -189,6 +258,11 @@
           {selectedProvincia?.length > 0
             ? selectedProvincia?.join(", ")
             : "Todas las provincias"}
+        </Badge>
+        <Badge color="blue">
+          {selectedLocalidad?.length > 0
+            ? selectedLocalidad?.join(", ")
+            : "Todas las localidades"}
         </Badge>
         <Badge color="blue">
           {records.length} registros
