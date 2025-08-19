@@ -9,6 +9,7 @@ type PersistedFilters = {
   selectedBandera: string[];
   selectedProvincia: string[];
   selectedLocalidad: string[];
+  selectedDate: Date;
   zone: string;
 };
 
@@ -17,6 +18,7 @@ const defaultFilters: PersistedFilters = {
   selectedBandera: [],
   selectedProvincia: [],
   selectedLocalidad: [],
+  selectedDate: new Date(),
   zone: "",
 };
 
@@ -30,13 +32,16 @@ function loadPersistedFilters(): PersistedFilters {
     const raw = localStorage.getItem(FILTERS_KEY);
     if (!raw) return { ...defaultFilters };
     const parsed = JSON.parse(raw);
-    const ensureArray = (v: unknown) => (Array.isArray(v) ? (v as string[]) : []);
-    const ensureString = (v: unknown) => (typeof v === "string" ? (v as string) : "");
+    const ensureArray = (v: unknown) =>
+      Array.isArray(v) ? (v as string[]) : [];
+    const ensureString = (v: unknown) =>
+      typeof v === "string" ? (v as string) : "";
     return {
       selectedProducto: ensureArray(parsed.selectedProducto),
       selectedBandera: ensureArray(parsed.selectedBandera),
       selectedProvincia: ensureArray(parsed.selectedProvincia),
       selectedLocalidad: ensureArray(parsed.selectedLocalidad),
+      selectedDate: new Date(ensureString(parsed.selectedDate)),
       zone: ensureString(parsed.zone),
     };
   } catch {
@@ -80,6 +85,7 @@ appStatusInfo.subscribe((state) => {
     selectedBandera: state.selectedBandera,
     selectedProvincia: state.selectedProvincia,
     selectedLocalidad: state.selectedLocalidad,
+    selectedDate: state.selectedDate,
     zone: state.zone,
   };
   persistFilters(filters);
@@ -98,6 +104,7 @@ export const setAppStatusLoaded = ({
   selectedBandera,
   selectedProvincia,
   selectedLocalidad,
+  selectedDate,
   zone,
   records,
   total,
@@ -109,6 +116,7 @@ export const setAppStatusLoaded = ({
   selectedBandera: string[];
   selectedProvincia: string[];
   selectedLocalidad: string[];
+  selectedDate: Date;
   zone: string;
   records: Record[];
   total: number;
@@ -122,6 +130,7 @@ export const setAppStatusLoaded = ({
     selectedBandera,
     selectedProvincia,
     selectedLocalidad,
+    selectedDate,
     zone,
     records,
     total,

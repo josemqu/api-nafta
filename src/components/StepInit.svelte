@@ -6,8 +6,17 @@
     setAppStatusError,
     setAppStatusLoaded,
   } from "../store.ts";
-  import { Label, Input, Select, MultiSelect, Badge } from "flowbite-svelte";
-  import { Button, Spinner } from "flowbite-svelte";
+  import {
+    Label,
+    Input,
+    Select,
+    MultiSelect,
+    Badge,
+    Datepicker,
+    P,
+    Button,
+    Spinner,
+  } from "flowbite-svelte";
   import { Producto, Provincia, Empresabandera } from "../utils/types.ts";
 
   let loading = false;
@@ -15,6 +24,7 @@
   let selectedProducto = $appStatusInfo.selectedProducto;
   let selectedBandera = $appStatusInfo.selectedBandera;
   let selectedLocalidad = $appStatusInfo.selectedLocalidad;
+  let selectedDate = $appStatusInfo.selectedDate;
   let zone = $appStatusInfo.zone;
   // Localidades options for the MultiSelect
   let localidades: { value: string; name: string }[] = [];
@@ -37,7 +47,9 @@
       if (!res.ok) return;
       const data = await res.json();
       const uniq = Array.from(
-        new Set((data.result?.records || []).map((r) => r.localidad).filter(Boolean))
+        new Set(
+          (data.result?.records || []).map((r) => r.localidad).filter(Boolean)
+        )
       ) as string[];
       localidades = uniq
         .sort((a, b) => a.localeCompare(b, "es-AR"))
@@ -202,7 +214,7 @@
     </div>
     <div class="mb-6 dark">
       <Label>
-        Localidad
+        Localidades
         <MultiSelect
           placeholder="Seleccione una o varias..."
           class="mt-2 min-w-60 bg-gray-900"
@@ -213,7 +225,7 @@
         />
       </Label>
     </div>
-    <div class="mb-6">
+    <div class="mb-6 dark">
       <Label for="zone-input" class="block mb-2">Zona</Label>
       <Input
         id="zone-input"
@@ -225,6 +237,10 @@
     </div>
   </div>
   <div class="flex justify-between align-middle">
+    <div class="mb-6 dark">
+      <Datepicker bind:value={selectedDate} class="mt-2 w-60" color="dark" />
+      <P class="mt-4">Selected date: {selectedDate}</P>
+    </div>
     <div>
       <Button color="dark" type="submit" disabled={loading} class="h-10 mr-4">
         {#if $appStatus === APP_STATUS.LOADING}

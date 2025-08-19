@@ -20,7 +20,16 @@
   const records = $appStatusInfo.records;
 
   // Sorting state
-  let sortKey: "idempresa" | "empresa" | "fecha" | "producto" | "precio" | "provincia" | "localidad" | "direccion" | null = null;
+  let sortKey:
+    | "idempresa"
+    | "empresa"
+    | "fecha"
+    | "producto"
+    | "precio"
+    | "provincia"
+    | "localidad"
+    | "direccion"
+    | null = null;
   let sortDir: "asc" | "desc" = "asc";
 
   const toggleSort = (key) => {
@@ -75,29 +84,73 @@
   <Table hoverable={true} class="relative dark w-full" shadow>
     <TableHead>
       <TableHeadCell class="sticky top-0 text-center">#</TableHeadCell>
-      <TableHeadCell class="sticky top-0 text-center cursor-pointer select-none" on:click={() => toggleSort("idempresa")} aria-label="Ordenar por ID">
+      <TableHeadCell
+        class="sticky top-0 text-center cursor-pointer select-none"
+        on:click={() => toggleSort("idempresa")}
+        aria-label="Ordenar por ID"
+      >
         ID {sortKey === "idempresa" ? (sortDir === "asc" ? "▲" : "▼") : ""}
       </TableHeadCell>
-      <TableHeadCell class="sticky top-0 cursor-pointer select-none" on:click={() => toggleSort("empresa")} aria-label="Ordenar por Empresa">
+      <TableHeadCell
+        class="sticky top-0 cursor-pointer select-none"
+        on:click={() => toggleSort("empresa")}
+        aria-label="Ordenar por Empresa"
+      >
         Empresa {sortKey === "empresa" ? (sortDir === "asc" ? "▲" : "▼") : ""}
       </TableHeadCell>
-      <TableHeadCell class="sticky top-0 text-center cursor-pointer select-none" on:click={() => toggleSort("fecha")} aria-label="Ordenar por Fecha">
+      <TableHeadCell
+        class="sticky top-0 text-center cursor-pointer select-none"
+        on:click={() => toggleSort("fecha")}
+        aria-label="Ordenar por Fecha"
+      >
         Fecha {sortKey === "fecha" ? (sortDir === "asc" ? "▲" : "▼") : ""}
       </TableHeadCell>
-      <TableHeadCell class="sticky top-0 cursor-pointer select-none" on:click={() => toggleSort("producto")} aria-label="Ordenar por Producto">
+      <TableHeadCell
+        class="sticky top-0 cursor-pointer select-none"
+        on:click={() => toggleSort("producto")}
+        aria-label="Ordenar por Producto"
+      >
         Producto {sortKey === "producto" ? (sortDir === "asc" ? "▲" : "▼") : ""}
       </TableHeadCell>
-      <TableHeadCell class="sticky top-0 text-center cursor-pointer select-none" on:click={() => toggleSort("precio")} aria-label="Ordenar por Precio">
+      <TableHeadCell
+        class="sticky top-0 text-center cursor-pointer select-none"
+        on:click={() => toggleSort("precio")}
+        aria-label="Ordenar por Precio"
+      >
         Precio {sortKey === "precio" ? (sortDir === "asc" ? "▲" : "▼") : ""}
       </TableHeadCell>
-      <TableHeadCell class="sticky top-0 cursor-pointer select-none" on:click={() => toggleSort("provincia")} aria-label="Ordenar por Provincia">
-        Provincia {sortKey === "provincia" ? (sortDir === "asc" ? "▲" : "▼") : ""}
+      <TableHeadCell
+        class="sticky top-0 cursor-pointer select-none"
+        on:click={() => toggleSort("provincia")}
+        aria-label="Ordenar por Provincia"
+      >
+        Provincia {sortKey === "provincia"
+          ? sortDir === "asc"
+            ? "▲"
+            : "▼"
+          : ""}
       </TableHeadCell>
-      <TableHeadCell class="sticky top-0 cursor-pointer select-none" on:click={() => toggleSort("localidad")} aria-label="Ordenar por Localidad">
-        Localidad {sortKey === "localidad" ? (sortDir === "asc" ? "▲" : "▼") : ""}
+      <TableHeadCell
+        class="sticky top-0 cursor-pointer select-none"
+        on:click={() => toggleSort("localidad")}
+        aria-label="Ordenar por Localidad"
+      >
+        Localidad {sortKey === "localidad"
+          ? sortDir === "asc"
+            ? "▲"
+            : "▼"
+          : ""}
       </TableHeadCell>
-      <TableHeadCell class="sticky top-0 cursor-pointer select-none" on:click={() => toggleSort("direccion")} aria-label="Ordenar por Dirección">
-        Dirección {sortKey === "direccion" ? (sortDir === "asc" ? "▲" : "▼") : ""}
+      <TableHeadCell
+        class="sticky top-0 cursor-pointer select-none"
+        on:click={() => toggleSort("direccion")}
+        aria-label="Ordenar por Dirección"
+      >
+        Dirección {sortKey === "direccion"
+          ? sortDir === "asc"
+            ? "▲"
+            : "▼"
+          : ""}
       </TableHeadCell>
     </TableHead>
     <TableBody tableBodyClass="divide-y">

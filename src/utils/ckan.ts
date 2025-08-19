@@ -127,7 +127,7 @@ export const getDataFromBbox = async (
 
   // Additional filters
   const allFilters = JSON.stringify({
-    idtipohorario: 2,
+    // idtipohorario: 2,
     ...filters,
   }).toString();
 
@@ -141,8 +141,11 @@ export const getDataFromBbox = async (
   const url = `${CKAN_API_URL}?${params.toString()}`;
   console.log({ url });
 
-  // initialize time for performance measurement
-  console.time("getDataFromBbox");
+  // initialize time for performance measurement with a unique label per call
+  const timerLabel = `getDataFromBbox-${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2, 7)}`;
+  console.time(timerLabel);
 
   // initialize time for returning the response
   let time = new Date().getTime();
@@ -190,6 +193,6 @@ export const getDataFromBbox = async (
     })
     .finally(() => {
       // print the time for performance measurement
-      console.timeEnd("getDataFromBbox");
+      console.timeEnd(timerLabel);
     });
 };
