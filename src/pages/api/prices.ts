@@ -57,7 +57,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   console.log({ filters });
 
-  const limit = 5000;
+  const limit = 10000;
 
   const data = await getDataFromBbox(filters, limit, zone);
   return new Response(JSON.stringify(data));

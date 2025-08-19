@@ -18,6 +18,7 @@
   import { Producto, Provincia, Empresabandera } from "../utils/types.ts";
 
   const records = $appStatusInfo.records;
+  const selectedDate = $appStatusInfo.selectedDate;
 
   // Sorting state
   let sortKey:
@@ -41,11 +42,27 @@
     }
   };
 
+  // Helper function to check if a record matches the selected date
+  const matchesDateFilter = (record) => {
+    if (!selectedDate) return true;
+    const recordDate = new Date(record.fecha_vigencia);
+    const filterDate = new Date(selectedDate);
+    
+    // Compare only the date part (ignore time)
+    return recordDate.toDateString() === filterDate.toDateString();
+  };
+
+  // Filter records by date first, then sort
+  $: filteredRecords = (() => {
+    if (!records || !Array.isArray(records)) return [];
+    return records.filter(matchesDateFilter);
+  })();
+
   // Derived sorted records
   $: sortedRecords = (() => {
-    if (!records || !Array.isArray(records) || !sortKey) return records;
+    if (!filteredRecords || !Array.isArray(filteredRecords) || !sortKey) return filteredRecords;
     const factor = sortDir === "asc" ? 1 : -1;
-    const arr = [...records];
+    const arr = [...filteredRecords];
     arr.sort((a, b) => {
       const getVal = (r) => {
         switch (sortKey) {

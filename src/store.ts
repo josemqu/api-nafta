@@ -36,12 +36,19 @@ function loadPersistedFilters(): PersistedFilters {
       Array.isArray(v) ? (v as string[]) : [];
     const ensureString = (v: unknown) =>
       typeof v === "string" ? (v as string) : "";
+    const ensureDate = (v: unknown): Date => {
+      if (typeof v === "string" && v) {
+        const date = new Date(v);
+        return isNaN(date.getTime()) ? new Date() : date;
+      }
+      return new Date();
+    };
     return {
       selectedProducto: ensureArray(parsed.selectedProducto),
       selectedBandera: ensureArray(parsed.selectedBandera),
       selectedProvincia: ensureArray(parsed.selectedProvincia),
       selectedLocalidad: ensureArray(parsed.selectedLocalidad),
-      selectedDate: new Date(ensureString(parsed.selectedDate)),
+      selectedDate: ensureDate(parsed.selectedDate),
       zone: ensureString(parsed.zone),
     };
   } catch {

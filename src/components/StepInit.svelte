@@ -101,6 +101,7 @@
       selectedBandera,
       selectedProvincia,
       selectedLocalidad,
+      selectedDate,
     });
 
     const searchParams = new URLSearchParams();
@@ -131,6 +132,7 @@
         selectedBandera,
         selectedProvincia,
         selectedLocalidad,
+        selectedDate,
         zone,
         records: data.result.records,
         total: data.result.total,
@@ -238,8 +240,18 @@
   </div>
   <div class="flex justify-between align-middle">
     <div class="mb-6 dark">
-      <Datepicker bind:value={selectedDate} class="mt-2 w-60" color="dark" />
-      <P class="mt-4">Selected date: {selectedDate}</P>
+      <Label>Fecha</Label>
+      <Datepicker
+        bind:value={selectedDate}
+        class="mt-2 w-60 dark"
+        theme="dark"
+        locale="es"
+      />
+      <P class="mt-4"
+        >Fecha seleccionada: {selectedDate
+          ? selectedDate.toLocaleDateString("es-AR")
+          : "Ninguna"}</P
+      >
     </div>
     <div>
       <Button color="dark" type="submit" disabled={loading} class="h-10 mr-4">
